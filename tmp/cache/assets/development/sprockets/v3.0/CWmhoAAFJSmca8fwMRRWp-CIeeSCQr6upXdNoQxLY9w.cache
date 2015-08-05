@@ -1,0 +1,5 @@
+I"7function(obj){var __p=[],print=function(){__p.push.apply(__p,arguments);};with(obj||{}){__p.push('<li class="toy-list-item" data-toy-id="', toy.escape('id'),'" data-pokemon-id="', toy.escape('pokemon_id'),'">\n  Name: ',  toy.escape('name') ,'\n  <br>\n  Happiness: ',  toy.escape('happiness') ,'\n  <br>\n  Price:  ',  toy.escape('price') ,'\n\n  <select>\n    ');  pokes.forEach( function (pokemon) {
+    <option value="', pokemon.escape('id'),'">
+      ',  pokemon.escape("name") ,'
+    </option>
+    <%} ; __p.push('\n  </select>\n</li>\n');}return __p.join('');}:ET

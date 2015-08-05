@@ -4,10 +4,12 @@ window.Pokedex = {
   Views: {},
   Routers: {},
   initialize: function () {
-    Pokedex.pokemonTypes = pokemonTypes;
-    var $el = $('#pokedex');
-    view = new Pokedex.Views.Pokemon({ el: $el });
-    view.refreshPokemon();
+    // Pokedex.pokemonTypes = pokemonTypes;
+    // var $el = $('#pokedex');
+    // view = new Pokedex.Views.Pokemon({ el: $el });
+    // view.refreshPokemon();
+    new Pokedex.Routers.Router();
+    Backbone.history.start();
   }
 };
 

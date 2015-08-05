@@ -6,10 +6,10 @@ Pokedex.Views.Pokemon = Backbone.View.extend({
     this.$toyDetail = this.$el.find('.toy-detail');
 
     this.pokes = new Pokedex.Collections.Pokemon();
-    
+
     this.$pokeList.on(
-      'click', 
-      'li.poke-list-item', 
+      'click',
+      'li.poke-list-item',
       this.selectPokemonFromList.bind(this)
     );
     this.$newPoke.on(
@@ -24,61 +24,42 @@ Pokedex.Views.Pokemon = Backbone.View.extend({
     );
   },
 
-  addPokemonToList: function (pokemon) {
-    var $li = $("<li class='poke-list-item'>");
-    $li.data('id', pokemon.escape('id'));
+  // addPokemonToList: function (pokemon) {
+  //   var content = JST["pokemonListItem"]({pokemon: pokemon});
+  //   var li = content;
+  //   this.$pokeList.append(li);
+  // },
 
-    $li.html(
-      "Name: " + pokemon.escape('name') + "<br>" + 
-      "Poke Type: " + pokemon.escape('poke_type')
-    );
-
-    this.$pokeList.append($li);
-  },
-
-  refreshPokemon: function () {
-    var that = this;
-
-    this.pokes.fetch({ success: function () {
-      that.pokes.each(function (poke) {
-        that.addPokemonToList(poke);
-      });
-    }});
-
-    this.$newPoke.html(JST['pokemonForm']());
-  },
+  // refreshPokemon: function () {
+  //   var that = this;
+  //
+  //   this.pokes.fetch({ success: function () {
+  //     that.pokes.each(function (poke) {
+  //       that.addPokemonToList(poke);
+  //     });
+  //   }});
+  //
+  //   this.$newPoke.html(JST['pokemonForm']());
+  // },
 
   renderPokemonDetail: function (pokemon) {
     var that = this;
+    var content = JST["pokemonDetail"]({ pokemon: pokemon});
 
-    var $detail = $("<div class='detail'>");
-    $detail.html(
-      "<img src='" + pokemon.escape('image_url') + "'><br>" +
-      "Name: " + pokemon.escape('name') + "<br>"
-    );
-    for(var attr in pokemon.attributes) {
-      if(attr != 'id' && attr != 'image_url' && attr != 'name') {
-        $detail.append("<p>" + attr + ": " + pokemon.escape(attr) + "</p>");
-      }
-    };
+    this.$pokeDetail.html(content);
 
-    this.$toyDetail.html('');
-    this.$pokeDetail.html($detail);
-    this.$pokeDetail.append($("<p>Toys: </p>"));
-    this.$pokeDetail.append($("<ul class='toys'>"));
-        
     pokemon.fetch({ success: function () {
       pokemon.toys().forEach(function (toy) {
         that.addToyToList(toy);
       });
-    }});   
+    }});
   },
 
-  selectPokemonFromList: function (event) {
-    var id = $(event.currentTarget).data('id');
-    var poke = this.pokes.get(id);
-    this.renderPokemonDetail(poke);
-  },
+  // selectPokemonFromList: function (event) {
+  //   var id = $(event.currentTarget).data('id');
+  //   var poke = this.pokes.get(id);
+  //   this.renderPokemonDetail(poke);
+  // },
 
   createPokemon: function (attributes, callback) {
     var pokemon = new Pokedex.Models.Pokemon(attributes);
@@ -94,32 +75,16 @@ Pokedex.Views.Pokemon = Backbone.View.extend({
     var attributes = $(event.currentTarget).serializeJSON();
     this.createPokemon(attributes, this.renderPokemonDetail.bind(this));
   },
-
-  addToyToList: function (toy) {
-    var $li = $("<li class='toy-list-item'>");
-    $li.data('toy-id', toy.escape('id'));
-    $li.data('pokemon-id', toy.escape('pokemon_id'));
-
-    $li.html(
-      "Name: " + toy.escape('name') + "<br>" +
-      "Happiness: " + toy.escape('happiness') + "<br>" +
-      "Price: " + toy.escape('price')   
-    );
-
-    this.$pokeDetail.find($('ul.toys')).append($li);
-  },
+  //
+  // addToyToList: function (toy) {
+  //   var content = JST["toyListItem"]({toy: toy});
+  //   var li = content;
+  //   this.$pokeDetail.find($('ul.toys')).append(li);
+  // },
 
   renderToyDetail: function (toy) {
-    var $detail = $("<div class='detail'>");
-
-    $detail.html(
-      "<img src='" + toy.escape('image_url') + "'>" + "<br>" +
-      "Name: " + toy.escape('name') + "<br>" +
-      "Happiness: " + toy.escape('happiness') + "<br>" +
-      "Price: " + toy.escape('price')   
-    );
-
-    this.$toyDetail.html($detail);
+    var content = JST["toyDetail"]({toy: toy, pokes: this.pokes});
+    this.$toyDetail.html(content);
   },
 
   selectToyFromList: function (event) {
